@@ -1,5 +1,4 @@
 
-
 from fastapi import FastAPI, HTTPException
 from uagents import Agent, Context
 from pydantic import BaseModel
@@ -21,8 +20,8 @@ class SlotRequest(BaseModel):
 
 app = FastAPI()
 
-# Shared slots
-shared_slots = [Slot(slot_id=i, available=True) for i in range(1, 11)]
+# Shared slots (creating slots 1 to 11)
+shared_slots = [Slot(slot_id=i, available=True) for i in range(1, 12)]
 
 class CentralAgent(Agent):
     def __init__(self):
@@ -74,9 +73,25 @@ class DriverAgent(Agent):
     async def release_slot(self, ctx: Context, slot_id: int) -> Dict[str, Any]:
         return await central_agent.release_slot(ctx, slot_id)
 
+class ParkingAgent(Agent):
+    def __init__(self):
+        super().__init__(name="Parking Agent", port=8002)
+        self.display_info()
+
+    def display_info(self):
+        print(f"Agent Name: {self.name}")
+        print(f"Port: {self._port}\n")
+
+    async def check_slots(self, ctx: Context) -> List[Dict[str, int]]:
+        return await central_agent.available_slots(ctx)
+
+    async def manage_parking(self, ctx: Context, slot_id: int) -> Dict[str, Any]:
+        return await central_agent.occupy_slot(ctx, slot_id)
+
 # Instantiate agents
 central_agent = CentralAgent()
 driver_agent = DriverAgent()
+parking_agent = ParkingAgent()
 
 @app.get("/available_slots")
 async def get_available_slots(role: str):
@@ -105,27 +120,35 @@ async def release_slot(slot_request: SlotRequest, role: str):
 # Terminal Interface
 console = Console()
 
+def display_slots_table(slots):
+    table = Table(title="Available Slots")
+    table.add_column("Slot ID", justify="center", style="cyan")
+    table.add_column("Status", justify="center", style="magenta")
+
+    for slot in slots:
+        status = "Available" if slot.available else "Occupied"
+        table.add_row(str(slot.slot_id), status)
+
+    console.print(table)
+
 def terminal_interface():
     while True:
         console.print("\n[bold cyan]Parking System Menu:[/bold cyan]")
         console.print("[1] View Available Slots")
         console.print("[2] Occupy a Slot (Driver only)")
         console.print("[3] Release a Slot (Driver only)")
-        console.print("[4] Exit")
+        console.print("[4] Check Slots (Parking Agent)")
+        console.print("[5] Exit")
         
         role = Prompt.ask("Enter your role (Driver/Parking Agent/Central Agent)", choices=["Driver", "Parking Agent", "Central Agent"])
         
-        choice = Prompt.ask("Choose an option (1-4)", choices=["1", "2", "3", "4"])
+        choice = Prompt.ask("Choose an option (1-5)", choices=["1", "2", "3", "4", "5"])
         
         if choice == "1":
             response = requests.get("http://127.0.0.1:8000/available_slots", params={"role": role})
             available_slots = response.json()
-            table = Table(title="Available Slots")
-            table.add_column("Slot ID", justify="center", style="cyan")
-            for slot in available_slots:
-                table.add_row(str(slot['slot_id']))
-            console.print(table)
-        
+            display_slots_table([Slot(slot_id=slot['slot_id'], available=True) for slot in available_slots])
+
         elif choice == "2":
             if role != "Driver":
                 console.print("[red]Only drivers can occupy slots.[/red]")
@@ -139,7 +162,7 @@ def terminal_interface():
                     console.print("[red]Error:[/red]", response.json().get("detail", "Slot not available."))
             except ValueError:
                 console.print("[red]Invalid input. Please enter a valid slot ID.[/red]")
-        
+
         elif choice == "3":
             if role != "Driver":
                 console.print("[red]Only drivers can release slots.[/red]")
@@ -153,17 +176,25 @@ def terminal_interface():
                     console.print("[red]Error:[/red]", response.json().get("detail", "Slot not occupied."))
             except ValueError:
                 console.print("[red]Invalid input. Please enter a valid slot ID.[/red]")
-        
+
         elif choice == "4":
+            if role != "Parking Agent":
+                console.print("[red]Only parking agents can check slots.[/red]")
+                continue
+            response = requests.get("http://127.0.0.1:8000/available_slots", params={"role": role})
+            available_slots = response.json()
+            display_slots_table([Slot(slot_id=slot['slot_id'], available=True) for slot in available_slots])
+
+        elif choice == "5":
             console.print("[yellow]Exiting...[/yellow]")
             break
-        
+
         else:
             console.print("[red]Invalid choice. Please try again.[/red]")
             
+            
+
 if __name__ == "__main__":
-    # Start the FastAPI server in a separate thread
-    
-    # Run the terminal interface
     terminal_interface()
-    threading.Thread(target=lambda: uvicorn.run(app, host="0.0.0.0", port=8000)).start()
+    
+threading.Thread(target=lambda: uvicorn.run(app, host="0.0.0.0", port=8000)).start()
