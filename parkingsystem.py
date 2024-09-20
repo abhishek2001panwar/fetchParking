@@ -80,9 +80,10 @@ parking_agent = ParkingAgent()
 async def get_available_slots():
     return await central_agent.available_slots(None)
 
+
 @app.post("/occupy_slot")
 async def occupy_slot(slot_request: SlotRequest):
-    result = await central_agent.occupy_slot(None, slot_request.slot_id , message="Slot occupied")
+    result = await central_agent.occupy_slot(None, slot_request.slot_id)
     if result["status"] == "not available":
         raise HTTPException(status_code=404, detail="Slot not available")
     return result
