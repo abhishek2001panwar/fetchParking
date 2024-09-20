@@ -1,0 +1,42 @@
+{
+    "<central_agent_private_key>": {
+        "identity_key": "75659f748944bc4645201828a2939372809061ab249500a86675a6b83dd02d39",
+        "wallet_key": "GVubt8wBBlM9mGW8ricif6zoibredKJGx4YUHD+nrKQ="
+    },
+    "<driver_agent_private_key>": {
+        "identity_key": "8595f64a46237a31016558c2bd59da4105730274f0ae4a2e7e89836990478a24",
+        "wallet_key": "OZcsqhWdcmn/pEZ9NfxF7lGLV6RRn3wdmi1CzT+aqxc="
+    },
+    "<parking_agent_private_key>": {
+        "identity_key": "a1ae0ef85bde2db619d135f46f986a30928de17f1fa2c677bd6a219652d76699",
+        "wallet_key": "lOSDJEdqD6qRjcLNeDzAJxeqvXgKydsDPrdSDyC1KpQ="
+    },
+    "driver": {
+        "identity_key": "a137f2a6115a3b2554b5d04b08b6d24a19a3026ac9e07787089f6c6fe85818b2",
+        "wallet_key": "XEwJthSChWoRrzPdbGS66l8FolyUfRYyA2kJBLgZnm4="
+    },
+    "parking": {
+        "identity_key": "4eedd63b256e81ef7f35387074a223c5670d5141ee4f980c271dfb3c66b236b4",
+        "wallet_key": "z7IdOVAfvkB3vRCdiUEPP2tdTVoPaHC0ONiTe2vU4Mg="
+    },
+    "Central Parking Agent": {
+        "identity_key": "77981aebad96f6d712d9c2c5b22a113560d4d1070600e5efb4100c7199dfc8f5",
+        "wallet_key": "hCUfQTRRWe6Ds56gNJfw9w9wzidEi1S+71wqv5l1KVU="
+    },
+    "Rest API": {
+        "identity_key": "173a67a6e6abbd757f0efc3c3c56ee1b861bc862350bfd714b4353f3799bebf1",
+        "wallet_key": "Z/dYE0shgehxjIQTaiLb7WjzF4L6YioDJ3lBqo2u6/Q="
+    },
+    "Central Agent": {
+        "identity_key": "250027f551e18dfdbb8b931f1bb309c161f17acdfa557e3a6c075a074a0bb076",
+        "wallet_key": "/JJiRXhemmmj53WEVkKGpqwjAQRW18/U0RWVtj1T8fQ="
+    },
+    "Driver Agent": {
+        "identity_key": "1a5c2c5e5ef74338941bab97a2e438b920a798a7f3431dfc17e09d336a89c94d",
+        "wallet_key": "75R+/LgXstvdv52XjwZoEFyi3NG1C68S+XOL2jCbjhs="
+    },
+    "Parking Agent": {
+        "identity_key": "ae151289c1ead04197192707a3a0850d3a8bdf766a0b1be97101c38495b1c03e",
+        "wallet_key": "WynpXySDRM6FUM1xPUjJiTVuYzQ5BHCHrg+99mB9ZYY="
+    }
+}
