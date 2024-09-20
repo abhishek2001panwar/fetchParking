@@ -195,6 +195,6 @@ def terminal_interface():
             
 
 if __name__ == "__main__":
-    terminal_interface()
-    
-threading.Thread(target=lambda: uvicorn.run(app, host="0.0.0.0", port=8000)).start()
+    # Start the FastAPI server in a separate thread
+    threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000)).start()
+    terminal_interface()  # Run the terminal interface after the server starts
