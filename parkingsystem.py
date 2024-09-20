@@ -1,5 +1,4 @@
 
-
 from fastapi import FastAPI, HTTPException
 from uagents import Agent, Context
 from pydantic import BaseModel
@@ -16,15 +15,18 @@ class SlotRequest(BaseModel):
 
 app = FastAPI()
 
+# Define a shared slots list outside of the agent classes
+shared_slots = [Slot(slot_id=i, available=True) for i in range(1, 11)]
+
 class CentralAgent(Agent):
     def __init__(self):
         super().__init__(name="Central Agent", port=8000)
-        self.slots = [Slot(slot_id=i, available=True) for i in range(1, 11)]
+        self.slots = shared_slots
         self.display_info()
 
     def display_info(self):
         print(f"Agent Name: {self.name}")
-        print(f"Port: {self._port}")  # Access the private port attribute
+        print(f"Port: {self._port}")
         print("Managed Slots:")
         for slot in self.slots:
             status = "Available" if slot.available else "Occupied"
@@ -48,7 +50,7 @@ class DriverAgent(Agent):
 
     def display_info(self):
         print(f"Agent Name: {self.name}")
-        print(f"Port: {self._port}\n")  # Access the private port attribute
+        print(f"Port: {self._port}\n")
 
     async def find_slots(self, ctx: Context) -> List[Dict[str, int]]:
         return await central_agent.available_slots(ctx)
@@ -59,17 +61,24 @@ class DriverAgent(Agent):
 class ParkingAgent(Agent):
     def __init__(self):
         super().__init__(name="Parking Agent", port=8002)
-        self.available_slots = [Slot(slot_id=i, available=True) for i in range(1, 11)]
+        self.slots = shared_slots  # Use the shared slots
         self.display_info()
 
     def display_info(self):
         print(f"Agent Name: {self.name}")
-        print(f"Port: {self._port}")  # Access the private port attribute
+        print(f"Port: {self._port}")
         print("Available Slots:")
-        for slot in self.available_slots:
+        for slot in self.slots:
             status = "Available" if slot.available else "Occupied"
             print(f"  - Slot ID: {slot.slot_id}, Status: {status}")
         print("\n")
+
+    async def occupy_slot(self, ctx: Context, slot_id: int) -> Dict[str, str]:
+        for slot in self.slots:
+            if slot.slot_id == slot_id and slot.available:
+                slot.available = False
+                return {"status": "occupied", "slot_id": slot_id}
+        return {"status": "not available", "slot_id": slot_id}
 
 # Instantiate agents
 central_agent = CentralAgent()
@@ -79,7 +88,6 @@ parking_agent = ParkingAgent()
 @app.get("/available_slots")
 async def get_available_slots():
     return await central_agent.available_slots(None)
-
 
 @app.post("/occupy_slot")
 async def occupy_slot(slot_request: SlotRequest):
@@ -101,7 +109,7 @@ async def occupy_driver_slot(slot_request: SlotRequest):
 
 @app.get("/parking/available_slots")
 async def get_parking_available_slots():
-    return [{"slot_id": slot.slot_id for slot in parking_agent.available_slots if slot.available}]
+    return [{"slot_id": slot.slot_id for slot in parking_agent.slots if slot.available}]
 
 @app.post("/parking/occupy_slot")
 async def occupy_parking_slot(slot_request: SlotRequest):
@@ -113,4 +121,3 @@ async def occupy_parking_slot(slot_request: SlotRequest):
 if __name__ == "__main__":
     print("Starting Parking System API...\n")
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
