@@ -38,5 +38,9 @@
     "Parking Agent": {
         "identity_key": "ae151289c1ead04197192707a3a0850d3a8bdf766a0b1be97101c38495b1c03e",
         "wallet_key": "WynpXySDRM6FUM1xPUjJiTVuYzQ5BHCHrg+99mB9ZYY="
+    },
+    "Payment Agent": {
+        "identity_key": "bd73ec1249f6c0eadfa0b516616469316e5b93f3406d48ced49f6bbab8832b2b",
+        "wallet_key": "uD/KK+6FjI8uHldMTT9iSejGrBr30xBBCNAtaUJhgCE="
     }
 }
