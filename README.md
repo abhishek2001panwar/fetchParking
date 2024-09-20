@@ -74,8 +74,8 @@ This project implements a parking system using the [`uagents`](command:_github.c
 
 1. Clone the repository:
     ```sh
-    git clone <repository_url>
-    cd <repository_directory>
+    git clone https://github.com/abhishek2001panwar/fetchParking
+    cd fetchParking
     ```
 
 2. Install the required dependencies:
