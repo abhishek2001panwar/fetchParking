@@ -42,5 +42,17 @@
     "Payment Agent": {
         "identity_key": "bd73ec1249f6c0eadfa0b516616469316e5b93f3406d48ced49f6bbab8832b2b",
         "wallet_key": "uD/KK+6FjI8uHldMTT9iSejGrBr30xBBCNAtaUJhgCE="
+    },
+    "central_agent": {
+        "identity_key": "b72dcaced9dfe08cd569b7d6e4ef875be73d9f4d82cd1d1f8ed1d5cfada82823",
+        "wallet_key": "ToneF+PXKvgMNXH3jOrv6kUr2T6GfHsLsD75eUdQfQI="
+    },
+    "driver_agent": {
+        "identity_key": "f76f2dc6f804e3d75b7b598c1ba89067f672af950dba196dd2d6398c01b179b7",
+        "wallet_key": "Nj0LO2PWr5oRyIvdP6FiP17r1THznCjDB4+r2qzPdHU="
+    },
+    "parking_agent": {
+        "identity_key": "a1371f31eb8cc53f420550ac1b0f652968ddbabfc9b6ccac496e998f012e911e",
+        "wallet_key": "pu/el76P/lHGGslcHMlo/vLT4bYyqPLn+4K/KGlRtEY="
     }
 }
